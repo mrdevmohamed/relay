@@ -1,0 +1,52 @@
+# Generic local proxy configuration (HTTP CONNECT + SOCKS5).
+# Copy to client.yaml and set RELAY_TOKEN in the environment:
+#   export RELAY_TOKEN="your-secret-token"
+#   ./relay-client --config ./client.yaml
+#
+# Flow per connection:
+#   app --CONNECT example.com:443--> 127.0.0.1:8080 (or SOCKS5 127.0.0.1:1080)
+#     --WSS {"type":"connect","host":"example.com","port":443}-->
+#       https://proxy.example.com/connect --TCP--> example.com:443
+
+listen:
+  http: "127.0.0.1:8080"
+  socks5: "127.0.0.1:1080"
+
+websocket:
+  url: "wss://proxy.example.com/connect"
+  token: "${RELAY_TOKEN}"
+
+relay:
+  frame_size: 16384
+  connect_timeout: 10s
+  idle_timeout: 10m
+  max_session_duration: 0s # 0 = unlimited
+  ping_interval: 30s
+  max_connections: 100
+
+socks5:
+  auth:
+    mode: "none" # or "password"
+    username: ""
+    password: ""
+
+# Local fast-path of the Worker destination policy.
+# The Worker always re-validates; keep both in sync.
+security:
+  allow_private_networks: false
+  allow_loopback: false
+  allow_link_local: false
+  allowed_domains: []
+  blocked_domains: []
+  allowed_ports: []
+
+tcp:
+  keepalive: 30s
+  tcp_nodelay: true
+
+logging:
+  level: info
+  format: json
+
+management:
+  address: "127.0.0.1:9090"

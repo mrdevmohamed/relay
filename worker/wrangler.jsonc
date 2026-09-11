@@ -1,0 +1,27 @@
+// Wrangler configuration for the OpenVPN WebSocket relay Worker.
+//
+// Secrets (never commit):
+//   wrangler secret put RELAY_TOKEN
+//
+// Non-secret config lives under `vars` below.
+
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "openvpn-ws-relay",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "vars": {
+    "ALLOW_PRIVATE_NETWORKS": "false",
+    "ALLOW_LOOPBACK": "false",
+    "ALLOW_LINK_LOCAL": "false",
+    "ALLOWED_DOMAINS": "",
+    "BLOCKED_DOMAINS": "",
+    "ALLOWED_PORTS": "",
+    "MAX_CONNECTIONS": "100",
+    "MAX_MESSAGE_SIZE": "1048576"
+  }
+  // To attach a custom domain (e.g. proxy.example.com), add:
+  // "routes": [{ "pattern": "proxy.example.com/connect*", "zone_name": "example.com" }]
+}

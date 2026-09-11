@@ -1,0 +1,19 @@
+# Local relay in host networking mode so apps on the host can reach
+# 127.0.0.1:8080 (HTTP CONNECT) and 127.0.0.1:1080 (SOCKS5) directly.
+# The Worker itself is deployed via Wrangler and is NOT containerized here.
+services:
+  relay-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    # Host networking: required because proxied apps typically run on the
+    # host and dial 127.0.0.1. With host mode, container ports == host ports:
+    #   8080 = HTTP CONNECT, 1080 = SOCKS5, 9090 = management (/health, /metrics)
+    network_mode: host
+    volumes:
+      # Mount your real config (copy from client/configs/client.example.yaml).
+      - ./client/configs/client.yaml:/app/configs/client.yaml:ro
+    environment:
+      # Token is expanded inside the YAML as ${RELAY_TOKEN}; also pass it here.
+      RELAY_TOKEN: ${RELAY_TOKEN:?set RELAY_TOKEN in the environment}
+    restart: unless-stopped

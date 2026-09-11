@@ -1,0 +1,37 @@
+# Binaries and build output
+bin/
+client/bin/
+*.exe
+*.test
+*.out
+
+# Go module cache artifacts
+vendor/
+
+# Node
+worker/node_modules/
+worker/.wrangler/
+worker/dist/
+worker/.vitest/
+worker/coverage/
+
+# Env and secrets — NEVER commit tokens, keys, or real configs
+.env
+.env.*
+*.pem
+*.key
+client/configs/client.yaml
+client/configs/*.yaml
+!client/configs/*.example.yaml
+# Local live config at repo root (personal domains, env-expanded secrets)
+/client.yaml
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Beads (if used)
+.beads/

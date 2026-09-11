@@ -1,0 +1,33 @@
+[Unit]
+Description=Generic Local Proxy (HTTP CONNECT + SOCKS5 over WebSocket to Cloudflare Worker)
+Documentation=https://example.com/openvpn-ws-cloudflare-relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=openvpn-relay
+Group=openvpn-relay
+ExecStart=/usr/local/bin/relay-client --config /etc/openvpn-ws-relay/client.yaml
+Restart=always
+RestartSec=3
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+# Config directory (read-only) and state
+ReadWritePaths=
+ConfigurationDirectory=openvpn-ws-relay
+
+[Install]
+WantedBy=multi-user.target
